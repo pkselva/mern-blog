@@ -25,8 +25,8 @@ export default function Header() {
             <Button className="sm:hidden p-2 bg-white border border-gray-200 hover:bg-gray-100 transition w-12 h-10" color="gray" pill>
                 <AiOutlineSearch className="text-black dark:text-white size-5" />
             </Button>
-            <div className='flex gap-2 md:order-2'>
-                <Button className="p-2 bg-white border border-gray-200 hover:bg-gray-100 transition w-12 h-10" color="gray" pill>
+            <div className='flex gap-2 sm:order-1'>
+                <Button className="hidden sm:inline p-2 bg-white border border-gray-200 hover:bg-gray-100 transition " color="gray" pill>
                     <FaMoon className="text-black dark:text-white" />
                 </Button>
                 <Link to={"/sign-in"}>
