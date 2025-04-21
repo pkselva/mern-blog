@@ -30,7 +30,7 @@ export default function Header() {
                     <FaMoon className="text-black dark:text-white" />
                 </Button>
                 <Link to={"/sign-in"}>
-                    <Button className="px-3 py-2 bg-white border border-gray-200 hover:bg-gray-100 transition text-black dark:text-white" color="gray" pill>
+                    <Button className="px-3 py-2 bg-white border border-gray-200 hover:bg-gray-100 hover:text-black transition text-black dark:text-white" outline color="gray" pill>
                         Sign In
                     </Button>
                 </Link>
