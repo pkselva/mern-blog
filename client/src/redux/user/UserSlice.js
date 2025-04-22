@@ -15,13 +15,13 @@ const userSlice = createSlice({
             state.error = null;
         },
         signInSuccess: (state, action) => {
-            state.currentUser = action.payload;
+            state.currentUser = action.payload.data;
             state.loading = false;
             state.error = null;
         },
         signInFailure: (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.data;
         }
     }
 });

@@ -74,7 +74,7 @@ export default function Signin() {
               <label>Your password</label>
               <input
                 type="password"
-                placeholder='********'
+                placeholder='************'
                 name='password'
                 onChange={handleOnChange}
                 className='border border-gray-300 rounded-lg p-2' />
