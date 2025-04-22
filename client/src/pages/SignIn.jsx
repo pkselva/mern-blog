@@ -2,13 +2,16 @@ import { Alert } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginUser } from '../services/product';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Signin() {
 
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector(state => state.user);
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleOnChange = (event) => {
     setFormData({
@@ -19,25 +22,22 @@ export default function Signin() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
 
     if (!formData.email || !formData.password) {
-      setLoading(false);
-      return setErrorMessage("Please fill out all fields");
+      return dispatch(signInFailure("Please fill out all fields"));
     }
 
     try {
+      dispatch(signInStart());
       const res = await loginUser(formData);
-      setLoading(false);
-      setErrorMessage(null);
       if (!res.success) {
-        return setErrorMessage(res.error || "Something went wrong");
+        return dispatch(signInFailure(res.error || "Something went wrong"));
       }
 
+      dispatch(signInSuccess(res));
       navigate('/');
     } catch (error) {
-      setLoading(false);
-      setErrorMessage("Something went wrong");
+      dispatch(signInFailure(error.message));
     }
   };
 
