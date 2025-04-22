@@ -1,8 +1,46 @@
-import { Button, Label, Textarea, TextInput } from 'flowbite-react'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { Alert } from 'flowbite-react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { registerUser } from '../services/product';
 
 export default function SignUp() {
+
+  const [formData, setFormData] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleOnChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value.trim()
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    if (!formData.userName || !formData.email || !formData.password) {
+      setLoading(false);
+      return setErrorMessage("Please fill out all fields");
+    }
+
+    try {
+      const res = await registerUser(formData);
+      setLoading(false);
+      setErrorMessage(null);
+      if (!res.success) {
+        return setErrorMessage(res.error || "Something went wrong");
+      }
+
+      navigate('/sign-in');
+    } catch (error) {
+      setLoading(false);
+      setErrorMessage("Something went wrong");
+    }
+  };
+
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-2xl mx-auto flex-col gap-5 md:flex-row md:items-center'>
@@ -21,29 +59,55 @@ export default function SignUp() {
         </div>
         {/* right */}
         <div className='flex-1'>
-          <form className='flex flex-col gap-4'>
-            <div className=''>
+          <form
+            className='flex flex-col gap-4'
+            onSubmit={handleSubmit}>
+            <div className='flex flex-col'>
               <label>Your username</label>
-              <TextInput type="text" placeholder='Username' id='userName'/>
+              <input
+                type="text"
+                placeholder='Username'
+                name='userName'
+                onChange={handleOnChange}
+                className='border border-gray-300 rounded-lg p-2' />
             </div>
-            <div className=''>
+            <div className='flex flex-col'>
               <label>Your email</label>
-              <TextInput type="text" placeholder='name@company.com' id='email'/>
+              <input
+                type="email"
+                placeholder='name@company.com'
+                name='email'
+                onChange={handleOnChange}
+                className='border border-gray-300 rounded-lg p-2' />
             </div>
-            <div className=''>
+            <div className='flex flex-col'>
               <label>Your password</label>
-              <TextInput type="password" placeholder='********' id='password'/>
+              <input
+                type="password"
+                placeholder='********'
+                name='password'
+                onChange={handleOnChange}
+                className='border border-gray-300 rounded-lg p-2' />
             </div >
-            <button className='p-2 rounded-lg text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l hover:from-purple-500 hover:to-pink-500 hover:cursor-pointer'>
-              Sign Up
+            <button
+              className={`p-2 rounded-lg text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l hover:from-purple-500 hover:to-pink-500 hover:cursor-pointer ${loading ? 'opacity-55 cursor-not-allowed' : ''}`}
+              type='submit'>
+              {loading ? 'Signing Up....' : 'Sign Up'}
             </button>
-            <div className='flex gap-2 text-sm'>
-              <span>Have an account?</span>
-              <Link to={"/sign-in"} className='text-blue-500'>
-                Sign In
-              </Link>
-            </div>
           </form>
+          <div className='flex gap-2 text-sm mt-5'>
+            <span>Have an account?</span>
+            <Link to={"/sign-in"} className='text-blue-500'>
+              Sign In
+            </Link>
+          </div>
+          {errorMessage && (
+            <Alert
+              // className="bg-red-100 text-red-500 p-2 text-center rounded-lg"
+              className='mt-5' color='failure'>
+              {errorMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
